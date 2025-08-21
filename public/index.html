@@ -189,7 +189,7 @@
             </p>
             <div class="max-w-xl mx-auto fade-in">
                 <!-- Begin Mailchimp Signup Form -->
-                <form action="https://strefasalzabaw.us1.list-manage.com/subscribe/post?u=281683d83e9d59b585434cab4&amp;id=ca420bdf6e&amp;f_id=00bed3e0f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="flex flex-col sm:flex-row gap-4 justify-center"  novalidate>
+                <form action="https://strefasalzabaw.us1.list-manage.com/subscribe/post?u=281683d83e9d59b585434cab4&amp;id=ca420bdf6e&amp;f_id=00bed3e0f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="flex flex-col sm:flex-row gap-4 justify-center" novalidate>
                     <input type="email" value="" name="EMAIL" id="mce-EMAIL" placeholder="Wpisz swój adres e-mail" class="required email w-full sm:w-2/3 p-4 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
 
                     <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
@@ -212,38 +212,6 @@
         </div>
     </section>
 
-
-<!--    <div id="mc_embed_shell">-->
-<!--        <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">-->
-<!--        <style type="text/css">-->
-<!--            #mc_embed_signup{background:#fff; false;clear:left; font:14px Helvetica,Arial,sans-serif; width: 600px;}-->
-<!--            /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.-->
-<!--               We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */-->
-<!--        </style>-->
-<!--        <div id="mc_embed_signup">-->
-<!--            <form action="https://strefasalzabaw.us1.list-manage.com/subscribe/post?u=281683d83e9d59b585434cab4&amp;id=ca420bdf6e&amp;f_id=00bed3e0f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">-->
-<!--                <div id="mc_embed_signup_scroll"><h2>Subscribe</h2>-->
-<!--                    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>-->
-<!--                    <div class="mc-field-group"><label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required="" value=""></div>-->
-<!--                    <div id="mce-responses" class="clear foot">-->
-<!--                        <div class="response" id="mce-error-response" style="display: none;"></div>-->
-<!--                        <div class="response" id="mce-success-response" style="display: none;"></div>-->
-<!--                    </div>-->
-<!--                    <div aria-hidden="true" style="position: absolute; left: -5000px;">-->
-<!--                        /* real people should not fill this in and expect good things - do not remove this or risk form bot signups */-->
-<!--                        <input type="text" name="b_281683d83e9d59b585434cab4_ca420bdf6e" tabindex="-1" value="">-->
-<!--                    </div>-->
-<!--                    <div class="optionalParent">-->
-<!--                        <div class="clear foot">-->
-<!--                            <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">-->
-<!--                            <p style="margin: 0px auto;"><a href="http://eepurl.com/jlGsyY" title="Mailchimp - email marketing made easy and fun"><span style="display: inline-block; background-color: transparent; border-radius: 4px;"><img class="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style="width: 220px; height: 40px; display: flex; padding: 2px 0px; justify-content: center; align-items: center;"></span></a></p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--        <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script><script type="text/javascript">(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script></div>-->
-
     <!-- Footer Section -->
     <footer class="bg-gray-800 text-gray-300 py-8 px-4 md:px-0 rounded-t-3xl">
         <div class="container mx-auto text-center text-sm">
@@ -251,8 +219,9 @@
         </div>
     </footer>
 
-    <!-- JavaScript for Animations -->
+    <!-- JavaScript for Animations & Mailchimp Form -->
     <script>
+        // Animation script for fade-in elements
         document.addEventListener("DOMContentLoaded", function() {
             const fadeInElements = document.querySelectorAll('.fade-in');
 
@@ -271,6 +240,57 @@
                 observer.observe(element);
             });
         });
+
+        // JavaScript for Mailchimp AJAX Submission
+        const mcForm = document.getElementById('mc-embedded-subscribe-form');
+
+        if (mcForm) {
+            mcForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Stop the form from submitting normally
+
+                const emailInput = document.getElementById('mce-EMAIL');
+                const messageContainer = document.getElementById('mc-message');
+
+                if (!emailInput.value || emailInput.value.indexOf('@') === -1) {
+                    messageContainer.innerHTML = 'Proszę podać prawidłowy adres e-mail.';
+                    return;
+                }
+
+                // Prepare the URL for Mailchimp's JSONP endpoint
+                const url = mcForm.action.replace('/post?', '/post-json?') + "&c=?";
+                const formData = new FormData(mcForm);
+                const params = new URLSearchParams(formData);
+
+                // Create a unique callback function for the JSONP request
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+
+                window[callbackName] = function(data) {
+                    // Clean up after the request
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+
+                    // Display the result from Mailchimp
+                    if (data.result === 'success') {
+                        messageContainer.innerHTML = 'Dziękujemy! Formularz został wysłany.';
+                        mcForm.reset();
+                    } else {
+                        let msg = data.msg || 'Wystąpił błąd. Spróbuj ponownie.';
+                        // Clean up Mailchimp's error message
+                        if (msg.includes('is already subscribed')) {
+                            msg = 'Ten adres e-mail jest już na liście.';
+                        }
+                        messageContainer.innerHTML = msg.replace(/^[0-9] - /, ''); // Removes error codes like "0 - "
+                    }
+                };
+
+                // Create and inject the script tag to make the request
+                const script = document.createElement('script');
+                script.src = `${url}&${params.toString()}`.replace('&c=?', `&c=${callbackName}`);
+                document.body.appendChild(script);
+
+                messageContainer.innerHTML = 'Przetwarzanie...';
+            });
+        }
     </script>
 </body>
 </html>
